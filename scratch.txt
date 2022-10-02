@@ -1,0 +1,6 @@
+Coordinates will save most space at beginning.
+The turtle is free to roam anywhere in the permitted rectangle; there is nothing that can block it.
+It will move to the chest and place items there.
+It will fetch fuel if it is running low.
+
+Step 1: Navigate to coordinates.

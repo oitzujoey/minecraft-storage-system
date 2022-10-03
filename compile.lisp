@@ -207,9 +207,24 @@
 						  ")")))
 	  (cl (emit-expression (eval `(progn ,@args))))
 	  (otherwise (concatenate 'string
-							  (map 'string
-								   (lambda (char) (if (eq char #\@) #\: char))
-								   (string-downcase (write-to-string fn)))
+							  (remove-if (lambda (value) (eq value #\-))
+										 (let ((was-dash nil))
+										   (map 'string
+												(lambda (char)
+												  (case char
+													(#\@
+													 (setf was-dash nil)
+													 #\:)
+													(#\-
+													 (setf was-dash t)
+													 char)
+													(otherwise
+													 (prog1
+														 (if was-dash
+															 (char-upcase char)
+															 char)
+													   (setf was-dash nil)))))
+												(string-downcase (write-to-string fn)))))
 							  "("
 							  (let ((args-left (length args)))
 								(collect-string (arg args)

@@ -55,7 +55,7 @@
 			   (set desiredOrientation 'EAST)
 			   (set desiredOrientation 'WEST)))
 	   (while (and (not (= desiredOrientation orientation)) (not error))
-			  (set error (not (turtle.turnLeft)))
+			  (set error (not (turtle.turn-left)))
 			  (if (= orientation 'EAST)
 				  (set orientation 'NORTH)
 				  (if (= orientation 'NORTH)

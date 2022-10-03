@@ -81,10 +81,24 @@
 													" "
 												  (decf args-left))
 												"")))))
-	  (setf (if (/= (length args) 2)
-				(error (concatenate 'string "SETF accepts one argument. " (write-to-string (length args)) " given."))
+	  (set (if (/= (length args) 2)
+			   (error (concatenate 'string "SETF accepts two arguments. " (write-to-string (length args)) " given."))
+			   (concatenate 'string
+							(emit-expression (first args))
+							"="
+							(emit-expression (second args)))))
+	  (setm (if (/= (length args) 2)
+				(error (concatenate 'string "SETM accepts two arguments. " (write-to-string (length args)) " given."))
 				(concatenate 'string
-							 (emit-expression (first args))
+							 (let ((args-left (length (first args))))
+							   (collect-string (arg (first args))
+											   (concatenate 'string
+															(emit-expression arg)
+															(if (/= args-left 1)
+																(prog1
+																	","
+																  (decf args-left))
+																""))))
 							 "="
 							 (emit-expression (second args)))))
 	  (while (concatenate 'string

@@ -125,24 +125,70 @@
 															  (decf args-left))
 															""))))
 						 " end"))
+	  (unless (concatenate 'string
+						   "if not "
+						   (emit-expression (first args))
+						   " then "
+						   (let ((args-left (length (rest args))))
+							 (collect-string (arg (rest args))
+											 (concatenate 'string
+														  (emit-expression arg)
+														  (if (/= args-left 1)
+															  (prog1
+																  " "
+																(decf args-left))
+															  ""))))
+						   " end"))
+	  (if (if (/= (length args) 3)
+			  (error (concatenate 'string "IF accepts three arguments. " (write-to-string (length args)) " given."))
+			  (concatenate 'string
+						   "if "
+						   (emit-expression (first args))
+						   " then "
+						   (emit-expression (second args))
+						   " else "
+						   (emit-expression (third args))
+						   " end")))
 	  (> (if (/= (length args) 2)
 			 (error (concatenate 'string "> accepts two arguments. " (write-to-string (length args)) " given."))
 			 (concatenate 'string
+						  "("
 						  (emit-expression (first args))
 						  ">"
-						  (emit-expression (second args)))))
+						  (emit-expression (second args))
+						  ")")))
 	  (< (if (/= (length args) 2)
 			 (error (concatenate 'string "< accepts two arguments. " (write-to-string (length args)) " given."))
 			 (concatenate 'string
+						  "("
 						  (emit-expression (first args))
 						  ">"
-						  (emit-expression (second args)))))
+						  (emit-expression (second args))
+						  ")")))
 	  (= (if (/= (length args) 2)
 			 (error (concatenate 'string "= accepts two arguments. " (write-to-string (length args)) " given."))
 			 (concatenate 'string
+						  "("
 						  (emit-expression (first args))
 						  "=="
-						  (emit-expression (second args)))))
+						  (emit-expression (second args))
+						  ")")))
+	  (and (if (/= (length args) 2)
+			   (error (concatenate 'string "AND accepts two arguments. " (write-to-string (length args)) " given."))
+			   (concatenate 'string
+							"("
+							(emit-expression (first args))
+							" and "
+							(emit-expression (second args))
+							")")))
+	  (or (if (/= (length args) 2)
+			  (error (concatenate 'string "OR accepts two arguments. " (write-to-string (length args)) " given."))
+			  (concatenate 'string
+						   "("
+						   (emit-expression (first args))
+						   " or "
+						   (emit-expression (second args))
+						   ")")))
 	  (cl (emit-expression (eval `(progn ,@args))))
 	  (otherwise (concatenate 'string
 							  (map 'string

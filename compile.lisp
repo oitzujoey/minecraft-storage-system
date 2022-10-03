@@ -51,6 +51,28 @@
 													" "
 												  (decf args-left))
 												"")))))
+	  (array (let ((temp (concatenate 'string
+									  "t"
+									  (write-to-string (emit-symbol (gensym)))))
+				   (index 0))
+			   (concatenate 'string
+							"(function() local "
+							temp
+							"={} "
+							(collect-string (arg args)
+											(let ((key index)
+												  (value arg))
+											  (incf index)
+											  (concatenate 'string
+														   temp
+														   "["
+														   (emit-expression key)
+														   "]="
+														   (emit-expression value)
+														   " ")))
+							"return "
+							temp
+							" end)()")))
 	  (table (let ((temp (concatenate 'string
 									  "t"
 									  (write-to-string (emit-symbol (gensym))))))
@@ -59,8 +81,8 @@
 							temp
 							"={} "
 							(collect-string (bind args)
-											(let ((key (car bind))
-												  (value (cdr bind)))
+											(let ((key (first bind))
+												  (value (rest bind)))
 											  (concatenate 'string
 														   temp
 														   "["
@@ -198,13 +220,20 @@
 						  (emit-expression (second args))
 						  ")")))
 	  (+ (if (/= (length args) 2)
-			 (error (concatenate 'string "- accepts two arguments. " (write-to-string (length args)) " given."))
+			 (error (concatenate 'string "+ accepts two arguments. " (write-to-string (length args)) " given."))
 			 (concatenate 'string
 						  "("
 						  (emit-expression (first args))
 						  "+"
 						  (emit-expression (second args))
 						  ")")))
+	  (elt (if (/= (length args) 2)
+			   (error (concatenate 'string "ELT accepts two arguments. " (write-to-string (length args)) " given."))
+			   (concatenate 'string
+							(emit-expression (first args))
+							"["
+							(emit-expression (second args))
+							"]")))
 	  (cl (emit-expression (eval `(progn ,@args))))
 	  (otherwise (concatenate 'string
 							  (remove-if (lambda (value) (eq value #\-))

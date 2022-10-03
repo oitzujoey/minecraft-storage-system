@@ -43,8 +43,8 @@
 			   (set run false))))
 
 (set run true)
+(set (x y z) (gps.locate))
 (while (and run (not error))
-	   (set (x y z) (gps.locate))
 	   (if (= x 202)
 		   (if (= z 714)
 			   (set run false)
@@ -67,6 +67,7 @@
 						  (when (= orientation 'SOUTH)
 							(set orientation 'EAST))))))
 	   (set error (not (turtle.forward)))
+	   (set (x y z) (gps.locate))
 	   (when (and (= x 202)
 				  (= z 714))
 		 (set run false)))

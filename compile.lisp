@@ -119,6 +119,61 @@
 								(emit-expression (first args)))
 							"="
 							(emit-expression (second args)))))
+	  (defun (concatenate 'string
+						  "function "
+						  (remove-if (lambda (value) (eq value #\-))
+									 (let ((was-dash nil))
+									   (map 'string
+											(lambda (char)
+											  (case char
+												(#\@
+												 (setf was-dash nil)
+												 #\:)
+												(#\-
+												 (setf was-dash t)
+												 char)
+												(otherwise
+												 (prog1
+													 (if was-dash
+														 (char-upcase char)
+														 char)
+												   (setf was-dash nil)))))
+											(string-downcase (write-to-string (first args))))))
+						  "("
+						  (let ((args-left (length (second args))))
+							(collect-string (bind (second args))
+											(concatenate 'string
+														 (remove-if (lambda (value) (eq value #\-))
+																	(let ((was-dash nil))
+																	  (map 'string
+																		   (lambda (char)
+																			 (case char
+																			   (#\-
+																				(setf was-dash t)
+																				char)
+																			   (otherwise
+																				(prog1
+																					(if was-dash
+																						(char-upcase char)
+																						char)
+																				  (setf was-dash nil)))))
+																		   (string-downcase (write-to-string bind)))))
+														 (if (/= args-left 1)
+															 (prog1
+																 ","
+															   (decf args-left))
+															 ""))))
+						  ") "
+						  (let ((args-left (length (cddr args))))
+							(collect-string (arg (cddr args))
+											(concatenate 'string
+														 (emit-expression arg)
+														 (if (/= args-left 1)
+															 (prog1
+																 " "
+															   (decf args-left))
+															 ""))))
+						  " end"))
 	  (while (concatenate 'string
 						  "while "
 						  (emit-expression (first args))

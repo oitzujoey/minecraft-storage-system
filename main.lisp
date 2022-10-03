@@ -17,7 +17,7 @@
 
 (local ox oy oz x y z dx dy dz)
 (set (ox oy oz) (gps.locate))
-(set error (not (turtle.forward())))
+(set error (not (turtle.forward)))
 (set (x y z) (gps.locate))
 (set dx (- x ox))
 (set dz (- z oz))

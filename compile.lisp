@@ -162,7 +162,7 @@
 			 (concatenate 'string
 						  "("
 						  (emit-expression (first args))
-						  ">"
+						  "<"
 						  (emit-expression (second args))
 						  ")")))
 	  (= (if (/= (length args) 2)

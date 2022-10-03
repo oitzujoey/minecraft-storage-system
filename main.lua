@@ -1,0 +1,1 @@
+local map map=(function() local t185={} t185[0]=(function() local t183={} t183[0]=0 t183[1]=202 t183[2]=62 t183[3]=714 return t183 end)() t185[1]=(function() local t184={} t184[0]=1 t184[1]=179 t184[2]=62 t184[3]=718 return t184 end)() return t185 end)() while true do turtle.forward() end

@@ -66,4 +66,7 @@
 						  (set orientation 'SOUTH)
 						  (when (= orientation 'SOUTH)
 							(set orientation 'EAST))))))
-	   (set error (not (turtle.forward))))
+	   (set error (not (turtle.forward)))
+	   (when (and (= x 202)
+				  (= z 714))
+		 (set run false)))

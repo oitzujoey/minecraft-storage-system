@@ -189,6 +189,22 @@
 						   " or "
 						   (emit-expression (second args))
 						   ")")))
+	  (- (if (/= (length args) 2)
+			 (error (concatenate 'string "- accepts two arguments. " (write-to-string (length args)) " given."))
+			 (concatenate 'string
+						  "("
+						  (emit-expression (first args))
+						  "-"
+						  (emit-expression (second args))
+						  ")")))
+	  (+ (if (/= (length args) 2)
+			 (error (concatenate 'string "- accepts two arguments. " (write-to-string (length args)) " given."))
+			 (concatenate 'string
+						  "("
+						  (emit-expression (first args))
+						  "+"
+						  (emit-expression (second args))
+						  ")")))
 	  (cl (emit-expression (eval `(progn ,@args))))
 	  (otherwise (concatenate 'string
 							  (map 'string

@@ -8,3 +8,5 @@
 ("minecraft:ender_pearl" 201 62 713)
 ("forbidden_arcanus:ender_pearl_fragment" 201 62 714)
 ("minecraft:light_gray_wool" 201 62 715)
+("create:andesite_alloy" 201 62 716)
+("minecraft:chest" 201 62 717)

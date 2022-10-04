@@ -4,3 +4,4 @@
 ("minecraft:netherrack" 181 62 697)
 ("create:shaft" 182 62 697)
 ("thermal:apatite" 183 62 697)
+("minecraft:cobblestone" 184 62 697)

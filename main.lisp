@@ -1,7 +1,9 @@
 
 (local map)
 (set map (cl `(table ,@(mapcar (lambda (entry)
-								 `(,(emit-symbol (first entry)) . (array ,@(rest entry))))
+								 `(,(let ((key (first entry)))
+									  (if (symbolp key) (emit-symbol key) key))
+								   . (array ,@(rest entry))))
 							   (with-open-file (infile "map.lisp")
 								 (do ((result nil (cons next result))
 									  (next (read infile nil 'eof)
@@ -108,7 +110,7 @@
   (unless (= nil item)
 	(set name item.name)
 	(print name)
-	;; (move-to-coordinates (elt map 'COAL) 'NORTH)
+	(move-to-coordinates (elt map name) 'NORTH)
 	;; (turtle.drop-up)
 	(move-to-coordinates home 'EAST)))
 

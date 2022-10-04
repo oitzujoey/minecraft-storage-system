@@ -40,6 +40,8 @@
 ;; Move to right height first.
 (defun move-to-coordinates (coord orient)
   ;; Move to right height
+  (local error)
+  (set error false)
   (local run)
   (set run true)
   (while (and run (not error))
@@ -98,7 +100,8 @@
 				 (if (= orientation 'WEST)
 					 (set orientation 'SOUTH)
 					 (when (= orientation 'SOUTH)
-					   (set orientation 'EAST)))))))
+					   (set orientation 'EAST))))))
+  (return error))
 
 (local COURIER_SLOT)
 (set COURIER_SLOT 1)

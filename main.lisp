@@ -104,6 +104,8 @@
 (set COURIER_SLOT 1)
 
 (defun sort-item ()
+  (local error)
+  (set error false)
   (move-to-coordinates home 'EAST)
   (turtle.select COURIER_SLOT)
   (turtle.suck)
@@ -116,11 +118,13 @@
 		(set name item.name)
 		(print name)
 		(set coord (elt map name))
+		(print coord)
 		(if (= nil coord)
 			(set error true)
 			(progn
 			  (move-to-coordinates coord 'NORTH)
 			  (turtle.drop-up)
-			  (move-to-coordinates home 'EAST))))))
+			  (move-to-coordinates home 'EAST)))))
+  (return error))
 
-(sort-item)
+(while (not (sort-item)))

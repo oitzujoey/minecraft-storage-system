@@ -111,3 +111,5 @@
 	;; (move-to-coordinates (elt map 'COAL) 'NORTH)
 	;; (turtle.drop-up)
 	(move-to-coordinates home 'EAST)))
+
+(sort-item)

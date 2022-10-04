@@ -289,6 +289,25 @@
 							"["
 							(emit-expression (second args))
 							"]")))
+	  (call (if (/= (length args) 2)
+				(error (concatenate 'string "CALL accepts two arguments. " (write-to-string (length args)) " given."))
+				(concatenate 'string
+							 (emit-expression (first args))
+							 "("
+							 (emit-expression (second args))
+							 ")")))
+	  (dot (if (/= (length args) 2)
+			   (error (concatenate 'string "DOT accepts two arguments. " (write-to-string (length args)) " given."))
+			   (concatenate 'string
+							(emit-expression (first args))
+							"."
+							(emit-expression (second args)))))
+	  (wrap (if (/= (length args) 1)
+				(error (concatenate 'string "WRAP accepts one argument. " (write-to-string (length args)) " given."))
+				(concatenate 'string
+							 "("
+							 (emit-expression (first args))
+							 ")")))
 	  (cl (emit-expression (eval `(progn ,@args))))
 	  (otherwise (concatenate 'string
 							  (remove-if (lambda (value) (eq value #\-))

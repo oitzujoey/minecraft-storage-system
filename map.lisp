@@ -5,3 +5,6 @@
 ("create:shaft" 182 62 697)
 ("thermal:apatite" 183 62 697)
 ("minecraft:cobblestone" 184 62 697)
+("minecraft:ender_pearl" 201 62 713)
+("forbidden_arcanus:ender_pearl_fragment" 201 62 714)
+("minecraft:light_gray_wool" 201 62 715)

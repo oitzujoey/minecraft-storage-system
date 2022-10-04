@@ -75,6 +75,8 @@
 			   (= z (elt coord 2)))
 	  (set run false))))
 
-(while true
-	   (move-to-coordinates home)
-	   (move-to-coordinates fuel))
+(move-to-coordinates home)
+(local chest)
+(set chest (peripheral.find "minecraft:chest"))
+(print (chest.size))
+(move-to-coordinates (elt map 'coal))

@@ -324,7 +324,7 @@
 (defun emit-expression (expr)
   (cond ((null expr) "nil")
 		((numberp expr) (write-to-string expr))
-		((stringp expr) expr)
+		((stringp expr) (concatenate 'string "\"" expr "\""))
 		((symbolp expr) (string-downcase (write-to-string expr)))
 		((listp expr) (emit-funcall expr))
 		(t (error (concatenate 'string "Bad expression: " (write-to-string expr))))))

@@ -81,20 +81,10 @@
 					(= z (elt coord 2)))
 		   (set run false)))
 
-  ;; Which direction should we face at the end?
-  (if (= x (elt coord 0))
-	  (if (= z (elt coord 2))
-		  (set run false)
-		  (if (< z (elt coord 2))
-			  (set desiredOrientation 'SOUTH)
-			  (set desiredOrientation 'NORTH)))
-	  (if (< x (elt coord 0))
-		  (set desiredOrientation 'EAST)
-		  (set desiredOrientation 'WEST)))
-  ;; Turn that direction.
+  ;; Face in the desired direction.
   (set run true)
   (while (and run
-			  (and (not (= desiredOrientation orientation))
+			  (and (not (= orient orientation))
 				   (not error)))
 		 (set error (not (turtle.turn-left)))
 		 (if (= orientation 'EAST)

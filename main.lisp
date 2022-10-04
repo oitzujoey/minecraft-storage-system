@@ -92,6 +92,7 @@
 		  (set desiredOrientation 'EAST)
 		  (set desiredOrientation 'WEST)))
   ;; Turn that direction.
+  (set run true)
   (while (and run
 			  (and (not (= desiredOrientation orientation))
 				   (not error)))

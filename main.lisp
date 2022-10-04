@@ -104,7 +104,7 @@
   (turtle.select COURIER_SLOT)
   (turtle.suck)
   (local item name)
-  (set item (turtle.getItemDetail))
+  (set item (turtle.get-item-detail))
   (unless (= nil item)
 	(set name item.name)
 	(print name)

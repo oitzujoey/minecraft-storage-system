@@ -1,3 +1,6 @@
 (home 201 62 714)
 (fuel 179 62 718)
 ("minecraft:coal" 180 62 697)
+("minecraft:netherrack" 181 62 697)
+("create:shaft" 182 62 697)
+("thermal:apatite" 183 62 697)

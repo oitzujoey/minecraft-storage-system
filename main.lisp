@@ -20,6 +20,8 @@
 (set error false)
 
 (local ox oy oz x y z dx dy dz)
+;; Go back first in case it's facing the loading chest.
+(set error (not (turtle.back)))
 (set (ox oy oz) (gps.locate))
 (set error (not (turtle.forward)))
 (set (x y z) (gps.locate))
@@ -105,13 +107,20 @@
   (move-to-coordinates home 'EAST)
   (turtle.select COURIER_SLOT)
   (turtle.suck)
-  (local item name)
+  (local item name coord)
   (set item (turtle.get-item-detail))
-  (unless (= nil item)
-	(set name item.name)
-	(print name)
-	(move-to-coordinates (elt map name) 'NORTH)
-	;; (turtle.drop-up)
-	(move-to-coordinates home 'EAST)))
+  (if (= nil item)
+	  (progn
+		(set error true))
+	  (progn
+		(set name item.name)
+		(print name)
+		(set coord (elt map name))
+		(if (= nil coord)
+			(set error true)
+			(progn
+			  (move-to-coordinates coord 'NORTH)
+			  (turtle.drop-up)
+			  (move-to-coordinates home 'EAST))))))
 
 (sort-item)

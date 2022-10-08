@@ -5,6 +5,7 @@
 (defmacro collect-string (bind &rest body)
   `(apply #'concatenate 'string (collect ,bind ,@body)))
 
+(defvar sources nil)
 
 (defvar symbols (make-hash-table))
 (defvar symbols-size 0)
@@ -349,10 +350,16 @@
 		(t (error (concatenate 'string "Bad expression: " (write-to-string expr))))))
 
 (defun compile-project ()
-  (let ((source (with-open-file (infile "main.lisp")
-				  (do ((result nil (cons next result))
-					   (next (read infile nil 'eof) (read infile nil 'eof)))
-					  ((equal next 'eof) (reverse result))))))
-	(with-open-file (outfile "main.lua" :direction :output
-										:if-exists :supersede)
-	  (format outfile (emit-expression `(progn ,@source))))))
+  (with-open-file (infile "sources.txt")
+	(do ((result nil nil)
+		 (next (read-line infile nil 'eof) (read-line infile nil 'eof)))
+		((equal next 'eof) t)
+		(let* ((source-name next)
+			   (source-file (concatenate 'string source-name ".lisp")))
+		  (let ((source (with-open-file (infile source-file)
+						  (do ((result nil (cons next result))
+							   (next (read infile nil 'eof) (read infile nil 'eof)))
+							  ((equal next 'eof) (reverse result))))))
+			(with-open-file (outfile (concatenate 'string source-name ".lua") :direction :output
+																			  :if-exists :supersede)
+			  (format outfile (emit-expression `(progn ,@source)))))))))

@@ -17,18 +17,62 @@
   (return error))
 
 (defmacro save-excursion (direction &rest body)
-  `(progn
-	 (move ',direction)
-	 ,@body
-	 (move ,(case direction
-			  (UP `'DOWN)
-			  (DOWN `'UP)
-			  (LEFT `'RIGHT)
-			  (RIGHT `'LEFT)
-			  (FORWARD `'BACKWARD)
-			  (BACKWARD `'FORWARD)
-			  (otherwise `'ERROR)))))
+  (labels ((flatten (list)
+			 (labels ((flatten2 (list last)
+						(if (listp list)
+							(if (null list)
+								last
+								(flatten2 (car list) (flatten2 (cdr list) last)))
+							(cons list (if (null last)
+										   nil
+										   (flatten2 (car last) (cdr last)))))))
+			   (flatten2 (car list) (cdr list))))
+		   (inverse-direction (direction)
+			 (case direction
+			   (UP `'DOWN)
+			   (DOWN `'UP)
+			   (LEFT `'RIGHT)
+			   (RIGHT `'LEFT)
+			   (FORWARD `'BACKWARD)
+			   (BACKWARD `'FORWARD)
+			   (otherwise `'ERROR))))
+	(if (listp direction)
+		(let ((directions (flatten (mapcar (lambda (direction)
+											 (if (listp direction)
+												 (labels ((rec (n)
+															(when (> n 0)
+															  (cons (first direction) (rec (1- n))))))
+												   (rec (second direction)))
+												 direction))
+										   direction))))
+		  `(progn
+			 ,@(mapcar (lambda (direction) `(move ',direction)) directions)
+			 ,@body
+			 ,@(mapcar (lambda (direction) `(move ,(inverse-direction direction))) directions)))
+		`(progn
+		   (move ',direction)
+		   ,@body
+		   (move ,(inverse-direction direction))))))
 
-(save-excursion DOWN
-				(save-excursion DOWN
-								(turtle.suck-down)))
+(local select-stack select-stack-top)
+(set select-stack (array))
+(set select-stack-top 0)
+(defun push-select (index)
+  (set select-stack-top (+ select-stack-top 1))
+  (set select-stack[select-stack-top] (turtle.get-selected-slot))
+  (turtle.select index))
+(defun pop-select ()
+  (turtle.select select-stack[select-stack-top])
+  (set select-stack-top (- select-stack-top 1)))
+
+(save-excursion ((DOWN 2)
+				 (BACKWARD 6)
+				 LEFT
+				 (FORWARD 7)
+				 LEFT
+				 FORWARD
+				 DOWN)
+				(push-select 2)
+				(turtle.suck)
+				(pop-select)
+				(turtle.drop))

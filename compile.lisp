@@ -17,9 +17,6 @@
 
 (defvar macros (make-hash-table))
 
-(defmacro mapply (fn &rest args)
-  `(apply ,fn ,@(mapcar (lambda (arg) `',arg) args)))
-
 (defun define-lua-macro (name binds body)
   (let* ((variadic (second (reverse binds)))
 		 (binds-length (if variadic
@@ -384,7 +381,24 @@
   (cond ((null expr) "nil")
 		((numberp expr) (write-to-string expr))
 		((stringp expr) (concatenate 'string "\"" expr "\""))
-		((symbolp expr) (string-downcase (write-to-string expr)))
+		((symbolp expr) (remove-if (lambda (value) (eq value #\-))
+								   (let ((was-dash nil))
+									 (map 'string
+										  (lambda (char)
+											(case char
+											  (#\@
+											   (setf was-dash nil)
+											   #\:)
+											  (#\-
+											   (setf was-dash t)
+											   char)
+											  (otherwise
+											   (prog1
+												   (if was-dash
+													   (char-upcase char)
+													   char)
+												 (setf was-dash nil)))))
+										  (string-downcase (write-to-string expr))))))
 		((listp expr) (emit-funcall expr))
 		(t (error (concatenate 'string "Bad expression: " (write-to-string expr))))))
 

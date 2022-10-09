@@ -31,4 +31,4 @@
 
 (save-excursion DOWN
 				(save-excursion DOWN
-								(turtle.suckDown)))
+								(turtle.suck-down)))

@@ -15,6 +15,35 @@
 (setf (gethash 'false symbols) "false")
 (incf symbols-size)
 
+(defvar macros (make-hash-table))
+
+(defmacro mapply (fn &rest args)
+  `(apply ,fn ,@(mapcar (lambda (arg) `',arg) args)))
+
+(defun define-lua-macro (name binds body)
+  (let* ((variadic (second (reverse binds)))
+		 (binds-length (if variadic
+						   (1- (length binds))
+						   (length binds))))
+	(setf (gethash name macros)
+		  (lambda (args)
+			(if (or (= (length args) binds-length)
+					(and variadic (>= (length args) binds-length)))
+				(eval `(apply (lambda ,binds ,@body) (list ,@(mapcar (lambda (arg) `',arg) args))))
+				(error (concatenate 'string
+									"Macro \""
+									(write-to-string name)
+									"\" was passed the wrong number of arguments. "
+									(write-to-string (length args))
+									" given. Wanted "
+									(write-to-string binds-length))))))))
+
+(defun eval-lua-macro (name args)
+  (emit-expression (funcall (gethash name macros) args)))
+
+(defun lua-macro-p (name)
+  (gethash name macros))
+
 (defun emit-symbol (sym)
   (multiple-value-bind (value status) (gethash sym symbols)
 	(if status
@@ -175,6 +204,14 @@
 															   (decf args-left))
 															 ""))))
 						  " end"))
+	  (defmacro (if (< (length args) 2)
+					(error (concatenate 'string
+										"DEFMACRO accepts a minimum of two arguments. "
+										(write-to-string (length args))
+										" given."))
+					(progn
+					  (define-lua-macro (first args) (second args) (cddr args))
+					  "")))
 	  (while (concatenate 'string
 						  "while "
 						  (emit-expression (first args))
@@ -310,36 +347,38 @@
 							 (emit-expression (first args))
 							 ")")))
 	  (cl (emit-expression (eval `(progn ,@args))))
-	  (otherwise (concatenate 'string
-							  (remove-if (lambda (value) (eq value #\-))
-										 (let ((was-dash nil))
-										   (map 'string
-												(lambda (char)
-												  (case char
-													(#\@
-													 (setf was-dash nil)
-													 #\:)
-													(#\-
-													 (setf was-dash t)
-													 char)
-													(otherwise
-													 (prog1
-														 (if was-dash
-															 (char-upcase char)
-															 char)
-													   (setf was-dash nil)))))
-												(string-downcase (write-to-string fn)))))
-							  "("
-							  (let ((args-left (length args)))
-								(collect-string (arg args)
-												(concatenate 'string
-															 (emit-expression arg)
-															 (if (/= args-left 1)
-																 (prog1
-																	 ","
-																   (decf args-left))
-																 ""))))
-							  ")")))))
+	  (otherwise (if (lua-macro-p fn)
+					 (eval-lua-macro fn args)
+					 (concatenate 'string
+								  (remove-if (lambda (value) (eq value #\-))
+											 (let ((was-dash nil))
+											   (map 'string
+													(lambda (char)
+													  (case char
+														(#\@
+														 (setf was-dash nil)
+														 #\:)
+														(#\-
+														 (setf was-dash t)
+														 char)
+														(otherwise
+														 (prog1
+															 (if was-dash
+																 (char-upcase char)
+																 char)
+														   (setf was-dash nil)))))
+													(string-downcase (write-to-string fn)))))
+								  "("
+								  (let ((args-left (length args)))
+									(collect-string (arg args)
+													(concatenate 'string
+																 (emit-expression arg)
+																 (if (/= args-left 1)
+																	 (prog1
+																		 ","
+																	   (decf args-left))
+																	 ""))))
+								  ")"))))))
 
 (defun emit-expression (expr)
   (cond ((null expr) "nil")

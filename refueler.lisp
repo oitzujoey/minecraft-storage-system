@@ -48,7 +48,7 @@
 		  `(progn
 			 ,@(mapcar (lambda (direction) `(move ',direction)) directions)
 			 ,@body
-			 ,@(mapcar (lambda (direction) `(move ,(inverse-direction direction))) directions)))
+			 ,@(mapcar (lambda (direction) `(move ,(inverse-direction direction))) (reverse directions))))
 		`(progn
 		   (move ',direction)
 		   ,@body

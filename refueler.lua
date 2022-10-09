@@ -1,1 +1,1 @@
-turtle.forward() turtle.back()
+turtle.down() turtle.down() turtle.suck() turtle.up() turtle.up()

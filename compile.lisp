@@ -81,7 +81,7 @@
 	  (array (let ((temp (concatenate 'string
 									  "t"
 									  (write-to-string (emit-symbol (gensym)))))
-				   (index 0))
+				   (index 1))
 			   (concatenate 'string
 							"(function() local "
 							temp

@@ -86,6 +86,6 @@
 (set total-unused-items (% total-items grid-size))
 (turtle.drop total-unused-items)
 (doarray (number (array 2 3 5 6 7 9 10 11))
-  (turtle.transfer-to i total-crafted-items))
+  (turtle.transfer-to number total-crafted-items))
 (turtle.craft total-crafted-items)
 (turtle.refuel 1)

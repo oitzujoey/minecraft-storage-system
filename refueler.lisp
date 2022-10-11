@@ -78,3 +78,14 @@
 												 RIGHT
 												 FORWARD)
 												(turtle.suck-down))))
+
+(local total-items total-crafted-items grid-size)
+(set grid-size 9)
+(set total-items (turtle.get-item-count))
+(set total-crafted-items (math.floor (/ total-items grid-size)))
+(set total-unused-items (% total-items grid-size))
+(turtle.drop total-unused-items)
+(doarray (number (array 2 3 5 6 7 9 10 11))
+  (turtle.transfer-to i total-crafted-items))
+(turtle.craft total-crafted-items)
+(turtle.refuel 1)

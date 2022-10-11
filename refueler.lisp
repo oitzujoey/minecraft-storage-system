@@ -65,14 +65,16 @@
   (turtle.select select-stack[select-stack-top])
   (set select-stack-top (- select-stack-top 1)))
 
-(save-excursion ((DOWN 2)
-				 (BACKWARD 6)
-				 LEFT
-				 (FORWARD 7)
-				 LEFT
-				 FORWARD
-				 DOWN)
-				(push-select 2)
-				(turtle.suck)
-				(pop-select)
-				(turtle.drop))
+(save-excursion ((DOWN 2))
+				(turtle.suck-down)
+				(save-excursion ((FORWARD 4)
+								 RIGHT
+								 FORWARD)
+								(turtle.drop)
+								(save-excursion (LEFT
+												 FORWARD
+												 RIGHT
+												 (FORWARD 7)
+												 RIGHT
+												 FORWARD)
+												(turtle.suck-down))))

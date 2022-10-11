@@ -65,6 +65,8 @@
   (turtle.select select-stack[select-stack-top])
   (set select-stack-top (- select-stack-top 1)))
 
+(local total-items total-crafted-items grid-size)
+(set grid-size 9)
 (save-excursion ((DOWN 2))
 				(turtle.suck-down)
 				(save-excursion ((FORWARD 4)
@@ -77,14 +79,11 @@
 												 (FORWARD 7)
 												 RIGHT
 												 FORWARD)
-												(turtle.suck-down))))
-
-(local total-items total-crafted-items grid-size)
-(set grid-size 9)
-(set total-items (turtle.get-item-count))
-(set total-crafted-items (math.floor (/ total-items grid-size)))
-(set total-unused-items (% total-items grid-size))
-(turtle.drop total-unused-items)
+												(turtle.suck-down)
+												(set total-items (turtle.get-item-count))
+												(set total-crafted-items (math.floor (/ total-items grid-size)))
+												(set total-unused-items (% total-items grid-size))
+												(turtle.drop-down total-unused-items))))
 (doarray (number (array 2 3 5 6 7 9 10 11))
   (turtle.transfer-to number total-crafted-items))
 (turtle.craft total-crafted-items)

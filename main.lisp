@@ -113,7 +113,7 @@
   (set z-diff (- (elt coord1 3) (elt coord2 3)))
   (return (math.sqrt (+ (+ (* x-diff x-diff) (* y-diff y-diff)) (* z-diff z-diff)))))
 
-(defun check-fuel ()
+(defun enough-fuel ()
   (local x y z)
   (set (x y z) (gps.locate))
   (return (< (distance fuel (array x y z))
@@ -143,6 +143,6 @@
               (move-to-coordinates home 'EAST)))))
   (return error))
 
-(while (and (not (sort-item)) (check-fuel)))
-(when (check-fuel)
+(while (and (not (sort-item)) (enough-fuel)))
+(when (not (enough-fuel))
   (print "Low on fuel."))

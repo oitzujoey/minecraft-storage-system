@@ -106,6 +106,19 @@
 (local COURIER_SLOT)
 (set COURIER_SLOT 1)
 
+(defun distance (coord1 coord2)
+  (local x-diff y-diff z-diff)
+  (set x-diff (- (elt coord1 0) (elt coord2 0)))
+  (set y-diff (- (elt coord1 1) (elt coord2 1)))
+  (set z-diff (- (elt coord1 2) (elt coord2 2)))
+  (math.sqrt (+ (+ (* x-diff x-diff) (* y-diff y-diff)) (* z-diff z-diff))))
+
+(defun check-fuel ()
+  (local position x y z)
+  (set (x y z) (gps.locate))
+  (< (distance fuel (array x y z))
+	 (turtle.get-fuel-level)))
+
 (defun sort-item ()
   (local error)
   (set error false)
@@ -130,4 +143,6 @@
               (move-to-coordinates home 'EAST)))))
   (return error))
 
-(while (not (sort-item)))
+(while (and (not (sort-item)) (check-fuel)))
+(when (check-fuel)
+  (print "Low on fuel."))

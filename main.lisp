@@ -108,9 +108,9 @@
 
 (defun distance (coord1 coord2)
   (local x-diff y-diff z-diff)
-  (set x-diff (- (elt coord1 0) (elt coord2 0)))
-  (set y-diff (- (elt coord1 1) (elt coord2 1)))
-  (set z-diff (- (elt coord1 2) (elt coord2 2)))
+  (set x-diff (- (elt coord1 1) (elt coord2 1)))
+  (set y-diff (- (elt coord1 2) (elt coord2 2)))
+  (set z-diff (- (elt coord1 3) (elt coord2 3)))
   (math.sqrt (+ (+ (* x-diff x-diff) (* y-diff y-diff)) (* z-diff z-diff))))
 
 (defun check-fuel ()

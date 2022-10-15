@@ -46,9 +46,9 @@
   (set run true)
   (while (and run (not error))
          (set (x y z) (gps.locate))
-         (if (> y (elt coord 1))
+         (if (> y (elt coord 2))
              (set error (not (turtle.down)))
-             (if (< y (elt coord 1))
+             (if (< y (elt coord 2))
                  (set error (not (turtle.up)))
                  (set run false))))
 
@@ -57,13 +57,13 @@
   (set (x y z) (gps.locate))
   (while (and run (not error))
          ;; Plan movement.
-         (if (= x (elt coord 0))
-             (if (= z (elt coord 2))
+         (if (= x (elt coord 1))
+             (if (= z (elt coord 3))
                  (set run false)
-                 (if (< z (elt coord 2))
+                 (if (< z (elt coord 3))
                      (set desiredOrientation 'SOUTH)
                      (set desiredOrientation 'NORTH)))
-             (if (< x (elt coord 0))
+             (if (< x (elt coord 1))
                  (set desiredOrientation 'EAST)
                  (set desiredOrientation 'WEST)))
          ;; Turn toward destination.
@@ -83,8 +83,8 @@
          (set error (not (turtle.forward)))
          ;; Are we there yet?
          (set (x y z) (gps.locate))
-         (when (and (= x (elt coord 0))
-                    (= z (elt coord 2)))
+         (when (and (= x (elt coord 1))
+                    (= z (elt coord 3)))
            (set run false)))
 
   ;; Face in the desired direction.
@@ -111,13 +111,13 @@
   (set x-diff (- (elt coord1 1) (elt coord2 1)))
   (set y-diff (- (elt coord1 2) (elt coord2 2)))
   (set z-diff (- (elt coord1 3) (elt coord2 3)))
-  (math.sqrt (+ (+ (* x-diff x-diff) (* y-diff y-diff)) (* z-diff z-diff))))
+  (return (math.sqrt (+ (+ (* x-diff x-diff) (* y-diff y-diff)) (* z-diff z-diff)))))
 
 (defun check-fuel ()
-  (local position x y z)
+  (local x y z)
   (set (x y z) (gps.locate))
-  (< (distance fuel (array x y z))
-	 (turtle.get-fuel-level)))
+  (return (< (distance fuel (array x y z))
+			 (turtle.get-fuel-level))))
 
 (defun sort-item ()
   (local error)
